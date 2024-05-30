@@ -60,11 +60,11 @@ using namespace std;
 %type <str> statements statement
 %type <str> if_statement 
 %type <str> switch_statement switch_cases switch_case 
-/* %type <str> while_statement
-%type <str> for_statement for_parameters for_parameter
+%type <str> while_statement
+%type <str> for_statement for_parameters
 %type <str> return_statement
 %type <str> break_statement
-%type <str> continue_statement */
+%type <str> continue_statement
 %token <str> IF ELSE
 %token <str> SWITCH CASE DEFAULT
 %token <str> WHILE DO
@@ -80,7 +80,6 @@ code
         $$ = strdup(s -> c_str()); delete s;
     }
     | declaration { $$ = $1; }
-    | statements { $$ = $1; }
 
 
 declaration
@@ -111,7 +110,15 @@ scalar_id
         string *s = new string(string($1) + "=" + string($3));
         $$ = strdup(s -> c_str()); delete s;
     }
+    | '*' ID '=' expression {
+        string *s = new string("*" + string($2) + "=" + string($4));
+        $$ = strdup(s -> c_str()); delete s;
+    }
     | ID { $$ = $1; }
+    | '*' ID {
+        string *s = new string("*" + string($2));
+        $$ = strdup(s -> c_str()); delete s;
+    }
 
 array_declaration
     : scalar_type arrays ';' {
@@ -160,9 +167,17 @@ func_declaration
         string *s = new string("<func_decl>" + string($1) + string($2) + ";</func_decl>");
         $$ = strdup(s -> c_str()); delete s;
     }
+    | scalar_type function compound_statements {
+        string *s = new string("<func_decl>" + string($1) + string($2) + string($3) + "</func_decl>");
+        $$ = strdup(s -> c_str()); delete s;
+    }
 function
     : ID '(' func_parameters ')' {
         string *s = new string(string($1) + "(" + string($3) + ")");
+        $$ = strdup(s -> c_str()); delete s;
+    }
+    | '*' ID '(' func_parameters ')' {
+        string *s = new string("*" + string($2) + "(" + string($4) + ")");
         $$ = strdup(s -> c_str()); delete s;
     }
 func_parameters
@@ -385,22 +400,52 @@ statement
         string *s = new string("<stmt>" + string($1) + ";</stmt>");
         $$ = strdup(s -> c_str()); delete s;
     }
-    | if_statement { $$ = $1; }
-    | switch_statement { $$ = $1; }
-
-if_statement
-    : IF '(' expression ')' '{' compound_statements '}' {
-        string *s = new string("<stmt>if(" + string($3) + "){" + string($6) + "}</stmt>");
+    | if_statement {
+        string *s = new string("<stmt>" + string($1) + "</stmt>");
         $$ = strdup(s -> c_str()); delete s;
     }
-    | IF '(' expression ')' '{' compound_statements '}' ELSE '{' compound_statements '}' {
-        string *s = new string("<stmt>if(" + string($3) + "){" + string($6) + "}else{" + string($10) + "}</stmt>");
+    | switch_statement {
+        string *s = new string("<stmt>" + string($1) + "</stmt>");
+        $$ = strdup(s -> c_str()); delete s;
+    }
+    | while_statement {
+        string *s = new string("<stmt>" + string($1) + "</stmt>");
+        $$ = strdup(s -> c_str()); delete s;
+    }
+    | for_statement {
+        string *s = new string("<stmt>" + string($1) + "</stmt>");
+        $$ = strdup(s -> c_str()); delete s;
+    }
+    | return_statement {
+        string *s = new string("<stmt>" + string($1) + "</stmt>");
+        $$ = strdup(s -> c_str()); delete s;
+    }
+    | break_statement {
+        string *s = new string("<stmt>" + string($1) + "</stmt>");
+        $$ = strdup(s -> c_str()); delete s;
+    }
+    | continue_statement {
+        string *s = new string("<stmt>" + string($1) + "</stmt>");
+        $$ = strdup(s -> c_str()); delete s;
+    }
+    | compound_statements {
+        string *s = new string("<stmt>" + string($1) + "</stmt>");
+        $$ = strdup(s -> c_str()); delete s;
+    }
+
+if_statement
+    : IF '(' expression ')' compound_statements {
+        string *s = new string("if(" + string($3) + ")" + string($5));
+        $$ = strdup(s -> c_str()); delete s;
+    }
+    | IF '(' expression ')' compound_statements ELSE compound_statements {
+        string *s = new string("if(" + string($3) + ")" + string($5) + "else" + string($7));
         $$ = strdup(s -> c_str()); delete s;
     }
 
 switch_statement
     : SWITCH '(' expression ')' '{' switch_cases '}' {
-        string *s = new string("<stmt>switch(" + string($3) + "){" + string($6) + "}</stmt>");
+        string *s = new string("switch(" + string($3) + "){" + string($6) + "}");
         $$ = strdup(s -> c_str()); delete s;
     }
 switch_cases
@@ -411,25 +456,86 @@ switch_cases
     | switch_case { $$ = $1; }
 switch_case
     : CASE expression ':' statements {
-        string *s = new string("case " + string($2) + ":" + string($4));
+        string *s = new string("case" + string($2) + ":" + string($4));
         $$ = strdup(s -> c_str()); delete s;
     }
     | DEFAULT ':' statements {
         string *s = new string("default:" + string($3));
         $$ = strdup(s -> c_str()); delete s;
     }
+    | CASE expression ':' {
+        string *s = new string("case" + string($2) + ":");
+        $$ = strdup(s -> c_str()); delete s;
+    }
+    | DEFAULT ':' {
+        string *s = new string("default:");
+        $$ = strdup(s -> c_str()); delete s;
+    }
+
+while_statement
+    : WHILE '(' expression ')' statement {
+        string *s = new string("while(" + string($3) + ")" + string($5));
+        $$ = strdup(s -> c_str()); delete s;
+    }
+    | DO statement WHILE '(' expression ')' ';' {
+        string *s = new string("do" + string($2) + "while(" + string($5) + ");");
+        $$ = strdup(s -> c_str()); delete s;
+    }
+
+for_statement
+    : FOR '(' for_parameters ')' statement {
+        string *s = new string("for(" + string($3) + ")" + string($5));
+        $$ = strdup(s -> c_str()); delete s;
+    }
+for_parameters
+    : expression ';' expression ';' expression {
+        string *s = new string(string($1) + ";" + string($3) + ";" + string($5));
+        $$ = strdup(s -> c_str()); delete s;
+    }
+
+return_statement
+    : RETURN expression ';' {
+        string *s = new string("return" + string($2) + ";");
+        $$ = strdup(s -> c_str()); delete s;
+    }
+
+break_statement
+    : BREAK ';' {
+        string *s = new string("break;");
+        $$ = strdup(s -> c_str()); delete s;
+    }
+
+continue_statement
+    : CONTINUE ';' {
+        string *s = new string("continue;");
+        $$ = strdup(s -> c_str()); delete s;
+    }
 
 compound_statements
-    : compound_statements scalar_declaration {
-        string *s = new string(string($1) + string($2));
+    : '{' compound_statements scalar_declaration '}' {
+        string *s = new string("{" + string($2) + string($3) + "}");
         $$ = strdup(s -> c_str()); delete s;
     }
-    | compound_statements array_declaration {
-        string *s = new string(string($1) + string($2));
+    | '{' compound_statements array_declaration '}' {
+        string *s = new string("{" + string($2) + string($3) + "}");
         $$ = strdup(s -> c_str()); delete s;
     }
-    | statements { $$ = $1; }
-    | { $$ = strdup(""); }
+    | '{' scalar_declaration '}' {
+        string *s = new string("{" + string($2) + "}");
+        $$ = strdup(s -> c_str()); delete s;
+    }
+    | '{' array_declaration '}' {
+        string *s = new string("{" + string($2) + "}");
+        $$ = strdup(s -> c_str()); delete s;
+    }
+    | '{' statements '}' { 
+        string *s = new string("{" + string($2) + "}");
+        $$ = strdup(s -> c_str()); delete s;
+    }
+    | '{' '}' { 
+        string *s = new string("{}");
+        $$ = strdup(s -> c_str()); delete s;
+    }
 %%
 
 int main() {

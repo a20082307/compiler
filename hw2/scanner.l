@@ -20,16 +20,7 @@ char* word(char* str, int len) {
 }
 %}
 
-keystr for|do|while|break|continue|if|else|return|struct|switch|case|default|void|int|double|float|char|const|signed|unsigned|short|long
-
-macros NULL|__COUNTER__|__LINE__|INT_MAX|INT_MIN|CHAR_MAX|CHAR_MIN|MAX|MIN
-
 id (("_"|[[:alpha:]]+)+)(([[:alnum:]]|"_")*)
-
-op1 "+"|"-"|"*"|"/"|"%"|"<"|">"|"!"|"="|"&"|"|"|"~"|"^"|"("|")"|"["|"]"
-op2 "++"|"--"|"=="|"&&"|"||"|"<="|">="|"!="|"<<"|">>"
-
-punc ":"|","|"."|"["|"]"|"("|")"|"{"|"}"
 
 int "-"([[:digit:]])+|"+"([[:digit:]])+|([[:digit:]])+
 
@@ -39,14 +30,6 @@ valid_char "\'"([^"\\"]|"\\a"|"\\b"|"\\e"|"\\f"|"\\n"|"\\r"|"\\t"|"\\v"|"\\\\"|"
 
 string "\""([^"\\"]|"\\a"|"\\b"|"\\e"|"\\f"|"\\n"|"\\r"|"\\t"|"\\v"|"\\\\"|"\\\'"|"\\\""|"\\\?"|"\\"([0-7]{1,3})|"\\x"([[:digit:]]|[a-fA-F])+|"\\u"([[:digit:]]|[a-fA-F]){4,4}|"\\U"([[:digit:]]|[a-fA-F]){8,8})*"\""
 
-%x COMMENT_START
-comment "//".*
-
-
-src_on ([ ]|\t)*("#pragma")([ ]|\t)*("source")([ ]|\t)*("on")
-src_off ([ ]|\t)*("#pragma")([ ]|\t)*("source")([ ]|\t)*("off")
-token_on ([ ]|\t)*("#pragma")([ ]|\t)*("token")([ ]|\t)*("on")
-token_off ([ ]|\t)*("#pragma")([ ]|\t)*("token")([ ]|\t)*("off")
 
 space " "|\t
 
@@ -96,6 +79,8 @@ type "const"|"signed"|"unsigned"|"long"|"short"|"int"|"char"|"float"|"double"|"v
 {space}*"do"{space}* { yylval.str = word(yytext, yyleng); return DO; }
 {space}*"for"{space}* { yylval.str = word(yytext, yyleng); return FOR; }
 
+{space}*":"{space}* { yylval.str = word(yytext, yyleng); return ':'; }
+
 {space}*{int}{space}* { yylval.str = word(yytext, yyleng); return INT; }
 {space}*{float}{space}* { yylval.str = word(yytext, yyleng); return FLOAT; }
 {space}*{valid_char}{space}* { yylval.str = word(yytext, yyleng); return CHAR; }
@@ -104,7 +89,7 @@ type "const"|"signed"|"unsigned"|"long"|"short"|"int"|"char"|"float"|"double"|"v
 
 {space}*{type}{space}* { yylval.str = word(yytext, yyleng); return TYPE; }
 {space}*","{space}* { yylval.str = word(yytext, yyleng); return ','; }
-{space}*"*"?{space}*{id} { yylval.str = word(yytext, yyleng); return ID; }
+{space}*{id}{space}* { yylval.str = word(yytext, yyleng); return ID; }
 
 
 %%
