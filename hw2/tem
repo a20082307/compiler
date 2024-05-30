@@ -1,0 +1,39 @@
+
+        | statements { $$ = $1; }
+    
+    
+    
+    | { $$ = strdup(""); }
+
+
+
+
+    | switch_statement { $$ = $1; }
+    | while_statement { $$ = $1; }
+    | for_statement { $$ = $1; }
+    | return_statement { $$ = $1; }
+    | break_statement { $$ = $1; }
+    | continue_statement { $$ = $1; }
+
+
+
+
+
+
+    | statements { $$ = $1; }
+    | code statements {
+        string *s = new string(string($1) + string($2));
+        $$ = strdup(s -> c_str()); delete s;
+    }
+
+
+    | scalar_type function func_definition {
+        string *s = new string("<func_decl>" + string($1) + string($2) + string($3) + "</func_decl>");
+        $$ = strdup(s -> c_str()); delete s;
+    }
+    func_definition
+    : '{' compound_statements '}' {
+        string *s = new string("{" + string($2) + "}");
+        $$ = strdup(s -> c_str()); delete s;
+    }
+    func_definition
