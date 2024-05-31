@@ -33,6 +33,7 @@ using namespace std;
 %type <str> expr_1
 %type <str> variable
 %type <str> literal
+%type <str> func_call_parameters
 %token <str> '='
 %token <str> OR
 %token <str> AND
@@ -191,9 +192,11 @@ func_parameter
         string *s = new string(string($1) + string($2));
         $$ = strdup(s -> c_str()); delete s;
     }
+    | scalar_type '*' ID {
+        string *s = new string(string($1) + "*" + string($3));
+        $$ = strdup(s -> c_str()); delete s;
+    }
     | { $$ = strdup(""); }
-
-
 
 expression
     : { $$ = strdup(""); }
@@ -363,9 +366,19 @@ expr_1
         string *s = new string("<expr>" + string($1) + string($2) + "</expr>");
         $$ = strdup(s -> c_str()); delete s;
     }
+    | expr_1 '(' func_call_parameters ')' {
+        string *s = new string("<expr>" + string($1) + "(" + string($3) + ")" + "</expr>");
+        $$ = strdup(s -> c_str()); delete s;
+    }
     | variable { $$ = $1; }
     | literal { $$ = $1; }
     | Null { $$ = strdup("<expr>0</expr>"); }
+func_call_parameters
+    : func_call_parameters ',' expression {
+        string *s = new string(string($1) + "," + string($3));
+        $$ = strdup(s -> c_str()); delete s;
+    }
+    | expression { $$ = $1; }
 variable
     : ID {
         string *s = new string("<expr>" + string($1) + "</expr>");

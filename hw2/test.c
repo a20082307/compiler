@@ -1,5 +1,6 @@
-int a() {
-    if (1) {
-        long long int * a = &b;
-    }
-}
+void a();
+const signed long long b(float c);
+unsigned * d(double * e, signed char f);
+signed short * g();
+
+
