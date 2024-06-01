@@ -47,13 +47,12 @@ using namespace std;
 %token <str> '*' '/' '%'
 %token <str> INC DEC '~' '!' '&'
 %token <str> '(' ')' '[' ']' '{' '}' Null
-
 %token <str> INT FLOAT CHAR STR
 
 %type <str> scalar_declaration scalar_type scalar_ids scalar_id
 %type <str> array_declaration arrays array array_shape array_content_elements array_content_element
 %type <str> func_declaration function func_parameters func_parameter
-%type <str> compound_statements
+%type <str> compound_statements compound_statement
 %token <str> TYPE ID 
 %token <str> ';' ',' ' '
 
@@ -169,7 +168,7 @@ func_declaration
         $$ = strdup(s -> c_str()); delete s;
     }
     | scalar_type function compound_statements {
-        string *s = new string("<func_decl>" + string($1) + string($2) + string($3) + "</func_decl>");
+        string *s = new string("<func_def>" + string($1) + string($2) + string($3) + "</func_def>");
         $$ = strdup(s -> c_str()); delete s;
     }
 function
@@ -525,33 +524,36 @@ continue_statement
     }
 
 compound_statements
-    : '{' compound_statements scalar_declaration '}' {
-        string *s = new string("{" + string($2) + string($3) + "}");
-        $$ = strdup(s -> c_str()); delete s;
-    }
-    | '{' compound_statements array_declaration '}' {
-        string *s = new string("{" + string($2) + string($3) + "}");
-        $$ = strdup(s -> c_str()); delete s;
-    }
-    | '{' scalar_declaration '}' {
+    : '{' compound_statement '}' {
         string *s = new string("{" + string($2) + "}");
         $$ = strdup(s -> c_str()); delete s;
     }
-    | '{' array_declaration '}' {
-        string *s = new string("{" + string($2) + "}");
-        $$ = strdup(s -> c_str()); delete s;
-    }
-    | '{' statements '}' { 
-        string *s = new string("{" + string($2) + "}");
-        $$ = strdup(s -> c_str()); delete s;
-    }
-    | '{' '}' { 
+    | '{' '}' {
         string *s = new string("{}");
         $$ = strdup(s -> c_str()); delete s;
     }
+compound_statement
+    : compound_statement scalar_declaration {
+        string *s = new string(string($1) + string($2));
+        $$ = strdup(s -> c_str()); delete s;
+    }
+    | compound_statement array_declaration {
+        string *s = new string(string($1) + string($2));
+        $$ = strdup(s -> c_str()); delete s;
+    }
+    | compound_statement statement {
+        string *s = new string(string($1) + string($2));
+        $$ = strdup(s -> c_str()); delete s;
+    }
+    | scalar_declaration { $$ = $1; }
+    | array_declaration { $$ = $1; }
+    | statement { $$ = $1; }
 %%
 
 int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
     yyparse();
     return 0;
 }
