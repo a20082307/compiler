@@ -3,9 +3,11 @@ extern "C"
 int yylex();
 void yyerror(const char* s);
 
-#include <iostream>
-#include <cstring>
+#include "symbol_table.cpp"
+#include "symbol_table.hpp"
 using namespace std;
+
+Table* table = new Table();
 %}
 
 %union {
@@ -72,7 +74,11 @@ using namespace std;
 %token <str> RETURN BREAK CONTINUE
 %start program
 %%
-program: code { cout << $1; } 
+program
+    : code { 
+        table -> init();
+        cout << $1;
+    } 
 
 code
     : code declaration {
@@ -114,7 +120,11 @@ scalar_id
         string *s = new string("*" + string($2) + "=" + string($4));
         $$ = strdup(s -> c_str()); delete s;
     }
-    | ID { $$ = $1; }
+    | ID { 
+        Symbol* var = new Symbol(table -> get_cur_scope(), $1);
+        
+        $$ = $1; 
+    }
     | '*' ID {
         string *s = new string("*" + string($2));
         $$ = strdup(s -> c_str()); delete s;
