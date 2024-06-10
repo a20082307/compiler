@@ -25,8 +25,6 @@ extern "C"
 int yylex();
 void yyerror(const char* s);
 
-#include <iostream>
-#include <cstring>
 #include "symbol_table.cpp"
 #include "symbol_table.hpp"
 using namespace std;
@@ -38,12 +36,12 @@ Table* table = new Table();
 #endif
 #ifndef YYSTYPE_IS_DECLARED
 #define YYSTYPE_IS_DECLARED 1
-#line 15 "parser.y"
+#line 13 "parser.y"
 typedef union YYSTYPE {
     char* str;
 } YYSTYPE;
 #endif /* !YYSTYPE_IS_DECLARED */
-#line 47 "y.tab.c"
+#line 45 "y.tab.c"
 
 /* compatibility with bison */
 #ifdef YYPARSE_PARAM
@@ -987,7 +985,7 @@ static YYINT  *yylexp = 0;
 
 static YYINT  *yylexemes = 0;
 #endif /* YYBTYACC */
-#line 563 "parser.y"
+#line 558 "parser.y"
 
 int main() {
     ios::sync_with_stdio(0);
@@ -1001,7 +999,7 @@ void yyerror(const char* s) {
     cerr << s << endl;
     exit(1);
 }
-#line 1005 "y.tab.c"
+#line 1003 "y.tab.c"
 
 /* For use in generated program */
 #define yydepth (int)(yystack.s_mark - yystack.s_base)
@@ -1672,944 +1670,941 @@ yyreduce:
     switch (yyn)
     {
 case 1:
-#line 80 "parser.y"
-	{ 
-        table -> init();
-        cout << yystack.l_mark[0].str;
-    }
-#line 1681 "y.tab.c"
+#line 78 "parser.y"
+	{ cout << yystack.l_mark[0].str; }
+#line 1676 "y.tab.c"
 break;
 case 2:
-#line 86 "parser.y"
+#line 81 "parser.y"
 	{
         string *s = new string(string(yystack.l_mark[-1].str) + string(yystack.l_mark[0].str));
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1689 "y.tab.c"
+#line 1684 "y.tab.c"
 break;
 case 3:
-#line 90 "parser.y"
+#line 85 "parser.y"
+	{ yyval.str = yystack.l_mark[0].str; }
+#line 1689 "y.tab.c"
+break;
+case 4:
+#line 89 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
 #line 1694 "y.tab.c"
 break;
-case 4:
-#line 94 "parser.y"
+case 5:
+#line 90 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
 #line 1699 "y.tab.c"
 break;
-case 5:
-#line 95 "parser.y"
+case 6:
+#line 91 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
 #line 1704 "y.tab.c"
 break;
-case 6:
-#line 96 "parser.y"
-	{ yyval.str = yystack.l_mark[0].str; }
-#line 1709 "y.tab.c"
-break;
 case 7:
-#line 100 "parser.y"
+#line 95 "parser.y"
 	{
         string *s = new string("<scalar_decl>" + string(yystack.l_mark[-2].str) + string(yystack.l_mark[-1].str) + ";</scalar_decl>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1717 "y.tab.c"
+#line 1712 "y.tab.c"
 break;
 case 8:
-#line 105 "parser.y"
+#line 100 "parser.y"
 	{ 
         string *s = new string(string(yystack.l_mark[-1].str) + string(yystack.l_mark[0].str));
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1725 "y.tab.c"
+#line 1720 "y.tab.c"
 break;
 case 9:
-#line 109 "parser.y"
+#line 104 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
-#line 1730 "y.tab.c"
+#line 1725 "y.tab.c"
 break;
 case 10:
-#line 111 "parser.y"
+#line 106 "parser.y"
 	{
         string *s = new string(string(yystack.l_mark[-2].str) + ',' + string(yystack.l_mark[0].str));
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1738 "y.tab.c"
+#line 1733 "y.tab.c"
 break;
 case 11:
-#line 115 "parser.y"
+#line 110 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
-#line 1743 "y.tab.c"
+#line 1738 "y.tab.c"
 break;
 case 12:
-#line 117 "parser.y"
+#line 112 "parser.y"
 	{
         string *s = new string(string(yystack.l_mark[-2].str) + "=" + string(yystack.l_mark[0].str));
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1751 "y.tab.c"
+#line 1746 "y.tab.c"
 break;
 case 13:
-#line 121 "parser.y"
+#line 116 "parser.y"
 	{
         string *s = new string("*" + string(yystack.l_mark[-2].str) + "=" + string(yystack.l_mark[0].str));
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1759 "y.tab.c"
+#line 1754 "y.tab.c"
 break;
 case 14:
-#line 125 "parser.y"
+#line 120 "parser.y"
 	{ 
-        Symbol* var = new Symbol(table -> get_cur_scope(), yystack.l_mark[0].str);
+        table -> append(new Symbol(yystack.l_mark[0].str, Type::Int, table -> get_cur_scope()));
         yyval.str = yystack.l_mark[0].str; 
     }
-#line 1767 "y.tab.c"
+#line 1762 "y.tab.c"
 break;
 case 15:
-#line 129 "parser.y"
+#line 124 "parser.y"
 	{
         string *s = new string("*" + string(yystack.l_mark[0].str));
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1775 "y.tab.c"
+#line 1770 "y.tab.c"
 break;
 case 16:
-#line 135 "parser.y"
+#line 130 "parser.y"
 	{
         string *s = new string("<array_decl>" + string(yystack.l_mark[-2].str) + string(yystack.l_mark[-1].str) + ";</array_decl>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1783 "y.tab.c"
+#line 1778 "y.tab.c"
 break;
 case 17:
-#line 140 "parser.y"
+#line 135 "parser.y"
 	{
         string *s = new string(string(yystack.l_mark[-2].str) + ',' +  string(yystack.l_mark[0].str));
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1791 "y.tab.c"
+#line 1786 "y.tab.c"
 break;
 case 18:
-#line 144 "parser.y"
+#line 139 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
-#line 1796 "y.tab.c"
+#line 1791 "y.tab.c"
 break;
 case 19:
-#line 146 "parser.y"
+#line 141 "parser.y"
 	{
         string *s = new string(string(yystack.l_mark[-5].str) + string(yystack.l_mark[-4].str) + "=" + "{" + string(yystack.l_mark[-1].str) + "}");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1804 "y.tab.c"
+#line 1799 "y.tab.c"
 break;
 case 20:
-#line 150 "parser.y"
+#line 145 "parser.y"
 	{
         string *s = new string(string(yystack.l_mark[-1].str) + string(yystack.l_mark[0].str));
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1812 "y.tab.c"
+#line 1807 "y.tab.c"
 break;
 case 21:
-#line 155 "parser.y"
+#line 150 "parser.y"
 	{
         string *s = new string(string(yystack.l_mark[-3].str) + "[" + string(yystack.l_mark[-1].str) + "]");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1820 "y.tab.c"
+#line 1815 "y.tab.c"
 break;
 case 22:
-#line 159 "parser.y"
+#line 154 "parser.y"
 	{
         string *s = new string("[" + string(yystack.l_mark[-1].str) + "]");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1828 "y.tab.c"
+#line 1823 "y.tab.c"
 break;
 case 23:
-#line 164 "parser.y"
+#line 159 "parser.y"
 	{
         string *s = new string(string(yystack.l_mark[-2].str) + ',' + string(yystack.l_mark[0].str));
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1836 "y.tab.c"
+#line 1831 "y.tab.c"
 break;
 case 24:
-#line 168 "parser.y"
+#line 163 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
-#line 1841 "y.tab.c"
+#line 1836 "y.tab.c"
 break;
 case 25:
-#line 170 "parser.y"
+#line 165 "parser.y"
 	{
         string *s = new string("{" + string(yystack.l_mark[-1].str) + "}");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1849 "y.tab.c"
+#line 1844 "y.tab.c"
 break;
 case 26:
-#line 174 "parser.y"
+#line 169 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
-#line 1854 "y.tab.c"
+#line 1849 "y.tab.c"
 break;
 case 27:
-#line 177 "parser.y"
+#line 172 "parser.y"
 	{
         string *s = new string("<func_decl>" + string(yystack.l_mark[-2].str) + string(yystack.l_mark[-1].str) + ";</func_decl>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1862 "y.tab.c"
+#line 1857 "y.tab.c"
 break;
 case 28:
-#line 181 "parser.y"
+#line 176 "parser.y"
 	{
         string *s = new string("<func_def>" + string(yystack.l_mark[-2].str) + string(yystack.l_mark[-1].str) + string(yystack.l_mark[0].str) + "</func_def>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1870 "y.tab.c"
+#line 1865 "y.tab.c"
 break;
 case 29:
-#line 186 "parser.y"
+#line 181 "parser.y"
 	{
         string *s = new string(string(yystack.l_mark[-3].str) + "(" + string(yystack.l_mark[-1].str) + ")");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1878 "y.tab.c"
+#line 1873 "y.tab.c"
 break;
 case 30:
-#line 190 "parser.y"
+#line 185 "parser.y"
 	{
         string *s = new string("*" + string(yystack.l_mark[-3].str) + "(" + string(yystack.l_mark[-1].str) + ")");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1886 "y.tab.c"
+#line 1881 "y.tab.c"
 break;
 case 31:
-#line 195 "parser.y"
+#line 190 "parser.y"
 	{
         string *s = new string(string(yystack.l_mark[-2].str) + "," + string(yystack.l_mark[0].str));
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1894 "y.tab.c"
+#line 1889 "y.tab.c"
 break;
 case 32:
-#line 199 "parser.y"
+#line 194 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
-#line 1899 "y.tab.c"
+#line 1894 "y.tab.c"
 break;
 case 33:
-#line 201 "parser.y"
+#line 196 "parser.y"
 	{
         string *s = new string(string(yystack.l_mark[-1].str) + string(yystack.l_mark[0].str));
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1907 "y.tab.c"
+#line 1902 "y.tab.c"
 break;
 case 34:
-#line 205 "parser.y"
+#line 200 "parser.y"
 	{
         string *s = new string(string(yystack.l_mark[-2].str) + "*" + string(yystack.l_mark[0].str));
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1915 "y.tab.c"
+#line 1910 "y.tab.c"
 break;
 case 35:
-#line 209 "parser.y"
+#line 204 "parser.y"
+	{ yyval.str = strdup(""); }
+#line 1915 "y.tab.c"
+break;
+case 36:
+#line 207 "parser.y"
 	{ yyval.str = strdup(""); }
 #line 1920 "y.tab.c"
 break;
-case 36:
-#line 212 "parser.y"
-	{ yyval.str = strdup(""); }
+case 37:
+#line 208 "parser.y"
+	{ yyval.str = yystack.l_mark[0].str; }
 #line 1925 "y.tab.c"
 break;
-case 37:
-#line 213 "parser.y"
-	{ yyval.str = yystack.l_mark[0].str; }
-#line 1930 "y.tab.c"
-break;
 case 38:
-#line 215 "parser.y"
+#line 210 "parser.y"
 	{
         string *s = new string("<expr>" + string(yystack.l_mark[-2].str) + "=" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1938 "y.tab.c"
+#line 1933 "y.tab.c"
 break;
 case 39:
-#line 219 "parser.y"
+#line 214 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
-#line 1943 "y.tab.c"
+#line 1938 "y.tab.c"
 break;
 case 40:
-#line 221 "parser.y"
+#line 216 "parser.y"
 	{
         string *s = new string("<expr>" + string(yystack.l_mark[-2].str) + "||" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1951 "y.tab.c"
+#line 1946 "y.tab.c"
 break;
 case 41:
-#line 225 "parser.y"
+#line 220 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
-#line 1956 "y.tab.c"
+#line 1951 "y.tab.c"
 break;
 case 42:
-#line 227 "parser.y"
+#line 222 "parser.y"
 	{
         string *s = new string("<expr>" + string(yystack.l_mark[-2].str) + "&&" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1964 "y.tab.c"
+#line 1959 "y.tab.c"
 break;
 case 43:
-#line 231 "parser.y"
+#line 226 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
-#line 1969 "y.tab.c"
+#line 1964 "y.tab.c"
 break;
 case 44:
-#line 233 "parser.y"
+#line 228 "parser.y"
 	{
         string *s = new string("<expr>" + string(yystack.l_mark[-2].str) + "|" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1977 "y.tab.c"
+#line 1972 "y.tab.c"
 break;
 case 45:
-#line 237 "parser.y"
+#line 232 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
-#line 1982 "y.tab.c"
+#line 1977 "y.tab.c"
 break;
 case 46:
-#line 239 "parser.y"
+#line 234 "parser.y"
 	{
         string *s = new string("<expr>" + string(yystack.l_mark[-2].str) + "^" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1990 "y.tab.c"
+#line 1985 "y.tab.c"
 break;
 case 47:
-#line 243 "parser.y"
+#line 238 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
-#line 1995 "y.tab.c"
+#line 1990 "y.tab.c"
 break;
 case 48:
-#line 245 "parser.y"
+#line 240 "parser.y"
 	{
         string *s = new string("<expr>" + string(yystack.l_mark[-2].str) + "&" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2003 "y.tab.c"
+#line 1998 "y.tab.c"
 break;
 case 49:
-#line 249 "parser.y"
+#line 244 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
-#line 2008 "y.tab.c"
+#line 2003 "y.tab.c"
 break;
 case 50:
-#line 251 "parser.y"
+#line 246 "parser.y"
 	{
         string *s = new string("<expr>" + string(yystack.l_mark[-2].str) + "==" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2016 "y.tab.c"
+#line 2011 "y.tab.c"
 break;
 case 51:
-#line 255 "parser.y"
+#line 250 "parser.y"
 	{
         string *s = new string("<expr>" + string(yystack.l_mark[-2].str) + "!=" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2024 "y.tab.c"
+#line 2019 "y.tab.c"
 break;
 case 52:
-#line 259 "parser.y"
+#line 254 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
-#line 2029 "y.tab.c"
+#line 2024 "y.tab.c"
 break;
 case 53:
-#line 261 "parser.y"
+#line 256 "parser.y"
 	{
         string *s = new string("<expr>" + string(yystack.l_mark[-2].str) + "<" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2037 "y.tab.c"
+#line 2032 "y.tab.c"
 break;
 case 54:
-#line 265 "parser.y"
+#line 260 "parser.y"
 	{
         string *s = new string("<expr>" + string(yystack.l_mark[-2].str) + ">" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2045 "y.tab.c"
+#line 2040 "y.tab.c"
 break;
 case 55:
-#line 269 "parser.y"
+#line 264 "parser.y"
 	{
         string *s = new string("<expr>" + string(yystack.l_mark[-2].str) + ">=" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2053 "y.tab.c"
+#line 2048 "y.tab.c"
 break;
 case 56:
-#line 273 "parser.y"
+#line 268 "parser.y"
 	{
         string *s = new string("<expr>" + string(yystack.l_mark[-2].str) + "<=" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2061 "y.tab.c"
+#line 2056 "y.tab.c"
 break;
 case 57:
-#line 277 "parser.y"
+#line 272 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
-#line 2066 "y.tab.c"
+#line 2061 "y.tab.c"
 break;
 case 58:
-#line 279 "parser.y"
+#line 274 "parser.y"
 	{
         string *s = new string("<expr>" + string(yystack.l_mark[-2].str) + ">>" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2074 "y.tab.c"
+#line 2069 "y.tab.c"
 break;
 case 59:
-#line 283 "parser.y"
+#line 278 "parser.y"
 	{
         string *s = new string("<expr>" + string(yystack.l_mark[-2].str) + "<<" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2082 "y.tab.c"
+#line 2077 "y.tab.c"
 break;
 case 60:
-#line 287 "parser.y"
+#line 282 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
-#line 2087 "y.tab.c"
+#line 2082 "y.tab.c"
 break;
 case 61:
-#line 289 "parser.y"
+#line 284 "parser.y"
 	{
         string *s = new string("<expr>" + string(yystack.l_mark[-2].str) + "+" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2095 "y.tab.c"
+#line 2090 "y.tab.c"
 break;
 case 62:
-#line 293 "parser.y"
+#line 288 "parser.y"
 	{
         string *s = new string("<expr>" + string(yystack.l_mark[-2].str) + "-" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2103 "y.tab.c"
+#line 2098 "y.tab.c"
 break;
 case 63:
-#line 297 "parser.y"
+#line 292 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
-#line 2108 "y.tab.c"
+#line 2103 "y.tab.c"
 break;
 case 64:
-#line 299 "parser.y"
+#line 294 "parser.y"
 	{
         string *s = new string("<expr>" + string(yystack.l_mark[-2].str) + "*" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2116 "y.tab.c"
+#line 2111 "y.tab.c"
 break;
 case 65:
-#line 303 "parser.y"
+#line 298 "parser.y"
 	{
         string *s = new string("<expr>" + string(yystack.l_mark[-2].str) + "/" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2124 "y.tab.c"
+#line 2119 "y.tab.c"
 break;
 case 66:
-#line 307 "parser.y"
+#line 302 "parser.y"
 	{
         string *s = new string("<expr>" + string(yystack.l_mark[-2].str) + "%" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2132 "y.tab.c"
+#line 2127 "y.tab.c"
 break;
 case 67:
-#line 311 "parser.y"
+#line 306 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
-#line 2137 "y.tab.c"
+#line 2132 "y.tab.c"
 break;
 case 68:
-#line 313 "parser.y"
+#line 308 "parser.y"
 	{
         string *s = new string("<expr>++" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2145 "y.tab.c"
+#line 2140 "y.tab.c"
 break;
 case 69:
-#line 317 "parser.y"
+#line 312 "parser.y"
 	{
         string *s = new string("<expr>--" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2153 "y.tab.c"
+#line 2148 "y.tab.c"
 break;
 case 70:
-#line 321 "parser.y"
+#line 316 "parser.y"
 	{
         string *s = new string("<expr>+" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2161 "y.tab.c"
+#line 2156 "y.tab.c"
 break;
 case 71:
-#line 325 "parser.y"
+#line 320 "parser.y"
 	{
         string *s = new string("<expr>-" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2169 "y.tab.c"
+#line 2164 "y.tab.c"
 break;
 case 72:
-#line 329 "parser.y"
+#line 324 "parser.y"
 	{
         string *s = new string("<expr>!" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2177 "y.tab.c"
+#line 2172 "y.tab.c"
 break;
 case 73:
-#line 333 "parser.y"
+#line 328 "parser.y"
 	{
         string *s = new string("<expr>~" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2185 "y.tab.c"
+#line 2180 "y.tab.c"
 break;
 case 74:
-#line 337 "parser.y"
+#line 332 "parser.y"
 	{
         string *s = new string("<expr>*" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2193 "y.tab.c"
+#line 2188 "y.tab.c"
 break;
 case 75:
-#line 341 "parser.y"
+#line 336 "parser.y"
 	{
         string *s = new string("<expr>&" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2201 "y.tab.c"
+#line 2196 "y.tab.c"
 break;
 case 76:
-#line 345 "parser.y"
+#line 340 "parser.y"
 	{
         string *s = new string("<expr>(" + string(yystack.l_mark[-2].str) + ")" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2209 "y.tab.c"
+#line 2204 "y.tab.c"
 break;
 case 77:
-#line 349 "parser.y"
+#line 344 "parser.y"
 	{
         string *s = new string("<expr>(" + string(yystack.l_mark[-3].str) + "*)" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2217 "y.tab.c"
+#line 2212 "y.tab.c"
 break;
 case 78:
-#line 353 "parser.y"
+#line 348 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
-#line 2222 "y.tab.c"
+#line 2217 "y.tab.c"
 break;
 case 79:
-#line 355 "parser.y"
+#line 350 "parser.y"
 	{
         string *s = new string("<expr>" + string(yystack.l_mark[-1].str) + "++" + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2230 "y.tab.c"
+#line 2225 "y.tab.c"
 break;
 case 80:
-#line 359 "parser.y"
+#line 354 "parser.y"
 	{
         string *s = new string("<expr>" + string(yystack.l_mark[-1].str) + "--" + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2238 "y.tab.c"
+#line 2233 "y.tab.c"
 break;
 case 81:
-#line 363 "parser.y"
+#line 358 "parser.y"
 	{
         string *s = new string("<expr>" + string(yystack.l_mark[-3].str) + string(yystack.l_mark[-2].str) + "()" + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2246 "y.tab.c"
+#line 2241 "y.tab.c"
 break;
 case 82:
-#line 367 "parser.y"
+#line 362 "parser.y"
 	{
         string *s = new string("<expr>(" + string(yystack.l_mark[-1].str) + ")</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2254 "y.tab.c"
+#line 2249 "y.tab.c"
 break;
 case 83:
-#line 371 "parser.y"
+#line 366 "parser.y"
 	{
         string *s = new string("<expr>" + string(yystack.l_mark[-2].str) + string(yystack.l_mark[-1].str) + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2262 "y.tab.c"
+#line 2257 "y.tab.c"
 break;
 case 84:
-#line 375 "parser.y"
+#line 370 "parser.y"
 	{
         string *s = new string("<expr>" + string(yystack.l_mark[-1].str) + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2270 "y.tab.c"
+#line 2265 "y.tab.c"
 break;
 case 85:
-#line 379 "parser.y"
+#line 374 "parser.y"
 	{
         string *s = new string("<expr>" + string(yystack.l_mark[-3].str) + "(" + string(yystack.l_mark[-1].str) + ")" + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2278 "y.tab.c"
+#line 2273 "y.tab.c"
 break;
 case 86:
-#line 383 "parser.y"
+#line 378 "parser.y"
+	{ yyval.str = yystack.l_mark[0].str; }
+#line 2278 "y.tab.c"
+break;
+case 87:
+#line 379 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
 #line 2283 "y.tab.c"
 break;
-case 87:
-#line 384 "parser.y"
-	{ yyval.str = yystack.l_mark[0].str; }
+case 88:
+#line 380 "parser.y"
+	{ yyval.str = strdup("<expr>0</expr>"); }
 #line 2288 "y.tab.c"
 break;
-case 88:
-#line 385 "parser.y"
-	{ yyval.str = strdup("<expr>0</expr>"); }
-#line 2293 "y.tab.c"
-break;
 case 89:
-#line 387 "parser.y"
+#line 382 "parser.y"
 	{
         string *s = new string(string(yystack.l_mark[-2].str) + "," + string(yystack.l_mark[0].str));
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2301 "y.tab.c"
+#line 2296 "y.tab.c"
 break;
 case 90:
-#line 391 "parser.y"
+#line 386 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
-#line 2306 "y.tab.c"
+#line 2301 "y.tab.c"
 break;
 case 91:
+#line 388 "parser.y"
+	{
+        string *s = new string("<expr>" + string(yystack.l_mark[0].str) + "</expr>");
+        yyval.str = strdup(s -> c_str()); delete s;
+    }
+#line 2309 "y.tab.c"
+break;
+case 92:
 #line 393 "parser.y"
 	{
         string *s = new string("<expr>" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2314 "y.tab.c"
-break;
-case 92:
-#line 398 "parser.y"
-	{
-        string *s = new string("<expr>" + string(yystack.l_mark[0].str) + "</expr>");
-        yyval.str = strdup(s -> c_str()); delete s;
-    }
-#line 2322 "y.tab.c"
+#line 2317 "y.tab.c"
 break;
 case 93:
-#line 402 "parser.y"
+#line 397 "parser.y"
 	{
         string *s = new string("<expr>" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2330 "y.tab.c"
+#line 2325 "y.tab.c"
 break;
 case 94:
-#line 406 "parser.y"
+#line 401 "parser.y"
 	{
         string *s = new string("<expr>" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2338 "y.tab.c"
+#line 2333 "y.tab.c"
 break;
 case 95:
-#line 410 "parser.y"
+#line 405 "parser.y"
 	{
         string *s = new string("<expr>" + string(yystack.l_mark[0].str) + "</expr>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2346 "y.tab.c"
+#line 2341 "y.tab.c"
 break;
 case 96:
-#line 416 "parser.y"
+#line 411 "parser.y"
 	{
         string *s = new string(string(yystack.l_mark[-1].str) + string(yystack.l_mark[0].str));
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2354 "y.tab.c"
+#line 2349 "y.tab.c"
 break;
 case 97:
-#line 420 "parser.y"
+#line 415 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
-#line 2359 "y.tab.c"
+#line 2354 "y.tab.c"
 break;
 case 98:
-#line 422 "parser.y"
+#line 417 "parser.y"
 	{
         string *s = new string("<stmt>" + string(yystack.l_mark[-1].str) + ";</stmt>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2367 "y.tab.c"
+#line 2362 "y.tab.c"
 break;
 case 99:
-#line 426 "parser.y"
+#line 421 "parser.y"
 	{
         string *s = new string("<stmt>" + string(yystack.l_mark[0].str) + "</stmt>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2375 "y.tab.c"
+#line 2370 "y.tab.c"
 break;
 case 100:
-#line 430 "parser.y"
+#line 425 "parser.y"
 	{
         string *s = new string("<stmt>" + string(yystack.l_mark[0].str) + "</stmt>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2383 "y.tab.c"
+#line 2378 "y.tab.c"
 break;
 case 101:
-#line 434 "parser.y"
+#line 429 "parser.y"
 	{
         string *s = new string("<stmt>" + string(yystack.l_mark[0].str) + "</stmt>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2391 "y.tab.c"
+#line 2386 "y.tab.c"
 break;
 case 102:
-#line 438 "parser.y"
+#line 433 "parser.y"
 	{
         string *s = new string("<stmt>" + string(yystack.l_mark[0].str) + "</stmt>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2399 "y.tab.c"
+#line 2394 "y.tab.c"
 break;
 case 103:
-#line 442 "parser.y"
+#line 437 "parser.y"
 	{
         string *s = new string("<stmt>" + string(yystack.l_mark[0].str) + "</stmt>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2407 "y.tab.c"
+#line 2402 "y.tab.c"
 break;
 case 104:
-#line 446 "parser.y"
+#line 441 "parser.y"
 	{
         string *s = new string("<stmt>" + string(yystack.l_mark[0].str) + "</stmt>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2415 "y.tab.c"
+#line 2410 "y.tab.c"
 break;
 case 105:
-#line 450 "parser.y"
+#line 445 "parser.y"
 	{
         string *s = new string("<stmt>" + string(yystack.l_mark[0].str) + "</stmt>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2423 "y.tab.c"
+#line 2418 "y.tab.c"
 break;
 case 106:
-#line 454 "parser.y"
+#line 449 "parser.y"
 	{
         string *s = new string("<stmt>" + string(yystack.l_mark[0].str) + "</stmt>");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2431 "y.tab.c"
+#line 2426 "y.tab.c"
 break;
 case 107:
-#line 460 "parser.y"
+#line 455 "parser.y"
 	{
         string *s = new string("if(" + string(yystack.l_mark[-2].str) + ")" + string(yystack.l_mark[0].str));
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2439 "y.tab.c"
+#line 2434 "y.tab.c"
 break;
 case 108:
-#line 464 "parser.y"
+#line 459 "parser.y"
 	{
         string *s = new string("if(" + string(yystack.l_mark[-4].str) + ")" + string(yystack.l_mark[-2].str) + "else" + string(yystack.l_mark[0].str));
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2447 "y.tab.c"
+#line 2442 "y.tab.c"
 break;
 case 109:
-#line 470 "parser.y"
+#line 465 "parser.y"
 	{
         string *s = new string("switch(" + string(yystack.l_mark[-4].str) + "){" + string(yystack.l_mark[-1].str) + "}");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2455 "y.tab.c"
+#line 2450 "y.tab.c"
 break;
 case 110:
-#line 475 "parser.y"
+#line 470 "parser.y"
 	{
         string *s = new string(string(yystack.l_mark[-1].str) + string(yystack.l_mark[0].str));
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2463 "y.tab.c"
+#line 2458 "y.tab.c"
 break;
 case 111:
-#line 479 "parser.y"
+#line 474 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
-#line 2468 "y.tab.c"
+#line 2463 "y.tab.c"
 break;
 case 112:
-#line 481 "parser.y"
+#line 476 "parser.y"
 	{
         string *s = new string("case" + string(yystack.l_mark[-2].str) + ":" + string(yystack.l_mark[0].str));
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2476 "y.tab.c"
+#line 2471 "y.tab.c"
 break;
 case 113:
-#line 485 "parser.y"
+#line 480 "parser.y"
 	{
         string *s = new string("default:" + string(yystack.l_mark[0].str));
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2484 "y.tab.c"
+#line 2479 "y.tab.c"
 break;
 case 114:
-#line 489 "parser.y"
+#line 484 "parser.y"
 	{
         string *s = new string("case" + string(yystack.l_mark[-1].str) + ":");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2492 "y.tab.c"
+#line 2487 "y.tab.c"
 break;
 case 115:
-#line 493 "parser.y"
+#line 488 "parser.y"
 	{
         string *s = new string("default:");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2500 "y.tab.c"
+#line 2495 "y.tab.c"
 break;
 case 116:
-#line 499 "parser.y"
+#line 494 "parser.y"
 	{
         string *s = new string("while(" + string(yystack.l_mark[-2].str) + ")" + string(yystack.l_mark[0].str));
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2508 "y.tab.c"
+#line 2503 "y.tab.c"
 break;
 case 117:
-#line 503 "parser.y"
+#line 498 "parser.y"
 	{
         string *s = new string("do" + string(yystack.l_mark[-5].str) + "while(" + string(yystack.l_mark[-2].str) + ");");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2516 "y.tab.c"
+#line 2511 "y.tab.c"
 break;
 case 118:
-#line 509 "parser.y"
+#line 504 "parser.y"
 	{
         string *s = new string("for(" + string(yystack.l_mark[-2].str) + ")" + string(yystack.l_mark[0].str));
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2524 "y.tab.c"
+#line 2519 "y.tab.c"
 break;
 case 119:
-#line 514 "parser.y"
+#line 509 "parser.y"
 	{
         string *s = new string(string(yystack.l_mark[-4].str) + ";" + string(yystack.l_mark[-2].str) + ";" + string(yystack.l_mark[0].str));
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2532 "y.tab.c"
+#line 2527 "y.tab.c"
 break;
 case 120:
-#line 520 "parser.y"
+#line 515 "parser.y"
 	{
         string *s = new string("return" + string(yystack.l_mark[-1].str) + ";");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2540 "y.tab.c"
+#line 2535 "y.tab.c"
 break;
 case 121:
-#line 526 "parser.y"
+#line 521 "parser.y"
 	{
         string *s = new string("break;");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2548 "y.tab.c"
+#line 2543 "y.tab.c"
 break;
 case 122:
-#line 532 "parser.y"
+#line 527 "parser.y"
 	{
         string *s = new string("continue;");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2556 "y.tab.c"
+#line 2551 "y.tab.c"
 break;
 case 123:
-#line 538 "parser.y"
+#line 533 "parser.y"
 	{
         string *s = new string("{" + string(yystack.l_mark[-1].str) + "}");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2564 "y.tab.c"
+#line 2559 "y.tab.c"
 break;
 case 124:
-#line 542 "parser.y"
+#line 537 "parser.y"
 	{
         string *s = new string("{}");
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2572 "y.tab.c"
+#line 2567 "y.tab.c"
 break;
 case 125:
-#line 547 "parser.y"
+#line 542 "parser.y"
 	{
         string *s = new string(string(yystack.l_mark[-1].str) + string(yystack.l_mark[0].str));
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2580 "y.tab.c"
+#line 2575 "y.tab.c"
 break;
 case 126:
-#line 551 "parser.y"
+#line 546 "parser.y"
 	{
         string *s = new string(string(yystack.l_mark[-1].str) + string(yystack.l_mark[0].str));
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2588 "y.tab.c"
+#line 2583 "y.tab.c"
 break;
 case 127:
-#line 555 "parser.y"
+#line 550 "parser.y"
 	{
         string *s = new string(string(yystack.l_mark[-1].str) + string(yystack.l_mark[0].str));
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 2596 "y.tab.c"
+#line 2591 "y.tab.c"
 break;
 case 128:
-#line 559 "parser.y"
+#line 554 "parser.y"
+	{ yyval.str = yystack.l_mark[0].str; }
+#line 2596 "y.tab.c"
+break;
+case 129:
+#line 555 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
 #line 2601 "y.tab.c"
 break;
-case 129:
-#line 560 "parser.y"
+case 130:
+#line 556 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
 #line 2606 "y.tab.c"
 break;
-case 130:
-#line 561 "parser.y"
-	{ yyval.str = yystack.l_mark[0].str; }
-#line 2611 "y.tab.c"
-break;
-#line 2613 "y.tab.c"
+#line 2608 "y.tab.c"
     default:
         break;
     }

@@ -75,10 +75,7 @@ Table* table = new Table();
 %start program
 %%
 program
-    : code { 
-        table -> init();
-        cout << $1;
-    } 
+    : code { cout << $1; } 
 
 code
     : code declaration {
@@ -121,8 +118,7 @@ scalar_id
         $$ = strdup(s -> c_str()); delete s;
     }
     | ID { 
-        Symbol* var = new Symbol(table -> get_cur_scope(), $1);
-        
+        table -> append(new Symbol($1, Type::Int, table -> get_cur_scope()));
         $$ = $1; 
     }
     | '*' ID {
