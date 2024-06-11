@@ -889,7 +889,7 @@ char* word(char* str, int len, int str_or_char = 0) {
     }
 
     strcat(wanted, "\0");    
-    // cout << "pass to parser: '" << wanted << "'" << endl;
+    cout << "pass to parser: '" << wanted << "'" << endl;
     return wanted;
 }
 #line 896 "lex.yy.c"

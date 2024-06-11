@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include <cstring>
 #include "symbol_table.hpp"
 using namespace std;
@@ -41,20 +42,23 @@ void Symbol::operator=(const Symbol& s) {
 }
 
 void Table::init() {
-    this -> risc_V.open("codegen.S");
-    if (!this -> risc_V.is_open()) {
+    risc_V.open("codegen.S");
+    if (!risc_V.is_open()) {
         cerr << "Error: cannot open file" << endl;
         return;
     }
-    this -> risc_V << "test" << endl;
 
     this -> entry = new Symbol[MAX_TABLE_SIZE];
+    this -> append(new Symbol("digitalWrite", Type::Function, -1));
+    this -> append(new Symbol("delay", Type::Function, -1));
+    this -> append(new Symbol("HIGH", Type::Int, -1));
+    this -> append(new Symbol("LOW", Type::Int, -1));
     // cout << "Table initialized \n";
 }
 
-bool Table::isExist(Symbol *s) {
+bool Table::isExist(string name) {
     for (int i = this -> cur_symbol_num - 1; i >= 0; i --) 
-        if (*s == this -> entry[i])
+        if (this -> entry[i].name == name && this -> entry[i].scope != -1)
             return true;
     
     return false;
@@ -76,10 +80,16 @@ int Table::find(string name) {
         return -1;
 
     for (int i = this -> cur_symbol_num - 1; i >= 0; i --) 
-        if (this -> entry[i].name == name)
+        if (this -> entry[i].name == name && this -> entry[i].scope != -1)
             return i;
+        else if (this -> entry[i].name == name && this -> entry[i].scope == -1)
+            return -2;
 
     return -1;
+}
+
+void Table::enter_new_scope() {
+    this -> cur_scope ++;
 }
 
 void Table::leave_cur_scope() {
@@ -113,6 +123,69 @@ void Table::setup_parameters(string name) {
     }
 }
 
-void Table::codegen_func_header() {
+void Table::codegen_func_header(string name) {
+    risc_V << name << ":" << endl;
+    risc_V << "    //BEGIN FUNCTION PROLOGUE" << endl;
+    risc_V << "    sw s0, -4(sp)      // save sp" << endl;
+    risc_V << "    addi sp, sp ,-4" << endl;
+    risc_V << "    addi s0, sp, 0     // set new sp" << endl;
+    risc_V << "    sw sp, -4(s0)" << endl;
+    risc_V << "    sw s1, -8(s0)" << endl;
+    risc_V << "    sw s2, -12(s0)" << endl;
+    risc_V << "    sw s3, -16(s0)" << endl;
+    risc_V << "    sw s4, -20(s0)" << endl;
+    risc_V << "    sw s5, -24(s0)" << endl;
+    risc_V << "    sw s6, -28(s0)" << endl;
+    risc_V << "    sw s7, -32(s0)" << endl;
+    risc_V << "    sw s8, -36(s0)" << endl;
+    risc_V << "    sw s9, -40(s0)" << endl;
+    risc_V << "    sw s10, -44(s0)" << endl;
+    risc_V << "    sw s11, -48(s0)" << endl;
+    risc_V << "    addi sp, s0, -48   // update sp" << endl;
+    risc_V << "    //END FUNCTION PROLOGUE" << endl << endl;
+}
 
+void Table::codegen_func_footer() {
+    risc_V << endl << "    //BEGIN FUNCTION EPILOGUE" << endl;
+    risc_V << "    lw s11, -48(s0)" << endl;
+    risc_V << "    lw s10, -44(s0)" << endl;
+    risc_V << "    lw s9, -40(s0)" << endl;
+    risc_V << "    lw s8, -36(s0)" << endl;
+    risc_V << "    lw s7, -32(s0)" << endl;
+    risc_V << "    lw s6, -28(s0)" << endl;
+    risc_V << "    lw s5, -24(s0)" << endl;
+    risc_V << "    lw s4, -20(s0)" << endl;
+    risc_V << "    lw s3, -16(s0)" << endl;
+    risc_V << "    lw s2, -12(s0)" << endl;
+    risc_V << "    lw s1, -8(s0)" << endl;
+    risc_V << "    lw sp, -4(s0)" << endl;
+    risc_V << "    addi sp, sp, 4" << endl;
+    risc_V << "    lw s0, -4(sp)" << endl;
+    risc_V << "    //END FUNCTION EPILOGUE" << endl << endl;
+    risc_V << "    jalr zero, 0(ra)   // return" << endl;
+}
+
+void generate_code(string code) {
+    risc_V << code;
+}
+
+void generate_digitalWrite_code(int pin, string value) {
+    generate_code("\n    // digitalWrite(" + to_string(pin) + ", " + value + ")\n");
+    generate_code("    addi sp, sp, -4\n");
+    generate_code("    sw ra, 0(sp)\n");
+    generate_code("    li a0, " + to_string(pin) + "\n");
+    generate_code("    li a1, " + to_string(int(value == "HIGH")) + "\n");
+    generate_code("    jal ra, digitalWrite\n");
+    generate_code("    lw ra, 0(sp)\n");
+    generate_code("    addi sp, sp, 4\n\n");
+}
+
+void generate_delay_code(int ms) {
+    generate_code("\n    // delay(" + to_string(ms) + ")\n");
+    generate_code("    addi sp, sp, -4\n");
+    generate_code("    sw ra, 0(sp)\n");
+    generate_code("    li a0, " + to_string(ms) + "\n");
+    generate_code("    jal ra, delay\n");
+    generate_code("    lw ra, 0(sp)\n");
+    generate_code("    addi sp, sp, 4\n\n");
 }

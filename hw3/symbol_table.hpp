@@ -7,23 +7,17 @@
 using namespace std;
 
 enum Type {
-    Int = 1,
-    Float = 2,
-    Char = 3,
-    String = 4,
-    Bool = 5,
-    Void = 6,
-    Array = 7,
-    Function = 8,
-    Struct = 9,
-    Pointer = 10,
-    Error = 11
+    Int,
+    Variable,
+    Array,
+    String,
+    Function,
 };
 
 enum Mode {
-    Argument = 1,
-    Local = 2,
-    Global = 3
+    Argument,
+    Local,
+    Global
 };
 
 class Symbol {
@@ -78,17 +72,19 @@ public:
     void operator=(const Symbol& s);
 };
 
+
 class Table {
+friend void generate_code(string);
+
 private: 
     int cur_scope;
     int cur_symbol_num;
     int index;
-    Symbol* entry;
-    ofstream risc_V;
-
     void init();
     
 public:
+    Symbol* entry;
+
     Table(): entry(NULL), cur_scope(0), cur_symbol_num(0), index(0) {
         init();
     }
@@ -97,12 +93,18 @@ public:
     int get_cur_symbol_num() { return this -> cur_symbol_num; }
 
     void append(Symbol*);
+    void enter_new_scope();
     void leave_cur_scope();
     void setup_parameters(string);
-    void codegen_func_header();
+    void codegen_func_header(string);
     void codegen_func_footer();
-    bool isExist(Symbol*);
+    bool isExist(string);
     int find(string);
 };
+
+ofstream risc_V;
+void generate_code(string);
+void generate_digitalWrite_code(int, string);
+void generate_delay_code(int);
 
 #endif

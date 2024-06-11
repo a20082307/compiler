@@ -1,23 +1,23 @@
 #ifndef _yy_defines_h_
 #define _yy_defines_h_
 
-#define OR 257
-#define AND 258
-#define EQUAL 259
-#define NOT_EQUAL 260
-#define GE 261
-#define LE 262
-#define RS 263
-#define LS 264
-#define INC 265
-#define DEC 266
-#define Null 267
-#define INT 268
-#define FLOAT 269
-#define CHAR 270
-#define STR 271
-#define TYPE 272
-#define ID 273
+#define TYPE 257
+#define ID 258
+#define OR 259
+#define AND 260
+#define EQUAL 261
+#define NOT_EQUAL 262
+#define GE 263
+#define LE 264
+#define RS 265
+#define LS 266
+#define INC 267
+#define DEC 268
+#define Null 269
+#define INT 270
+#define FLOAT 271
+#define CHAR 272
+#define STR 273
 #define IF 274
 #define ELSE 275
 #define SWITCH 276
