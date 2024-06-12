@@ -142,12 +142,36 @@ expression
     : expr_4
     | { $$ = strdup(""); }
 expr_4
-    : expr_4 '+' expr_3
-    | expr_4 '-' expr_3
+    : expr_4 '+' expr_3 {
+        generate_code("    lw t0, 4(sp)\n");
+        generate_code("    lw t1, 0(sp)\n");
+        generate_code("    add t0, t0, t1\n");
+        generate_code("    addi sp, sp, 4\n");
+        generate_code("    sw t0, 0(sp)\n");
+    }
+    | expr_4 '-' expr_3 {
+        generate_code("    lw t0, 4(sp)\n");
+        generate_code("    lw t1, 0(sp)\n");
+        generate_code("    sub t0, t0, t1\n");
+        generate_code("    addi sp, sp, 4\n");
+        generate_code("    sw t0, 0(sp)\n");
+    }
     | expr_3
 expr_3
-    : expr_3 '*' expr_2
-    | expr_3 '/' expr_2
+    : expr_3 '*' expr_2 {
+        generate_code("    lw t0, 4(sp)\n");
+        generate_code("    lw t1, 0(sp)\n");
+        generate_code("    mul t0, t0, t1\n");
+        generate_code("    addi sp, sp, 4\n");
+        generate_code("    sw t0, 0(sp)\n");
+    }
+    | expr_3 '/' expr_2 {
+        generate_code("    lw t0, 4(sp)\n");
+        generate_code("    lw t1, 0(sp)\n");
+        generate_code("    div t0, t0, t1\n");
+        generate_code("    addi sp, sp, 4\n");
+        generate_code("    sw t0, 0(sp)\n");
+    }
     | expr_2
 expr_2
     : expr_1
@@ -199,7 +223,11 @@ variable
         }
     }
 literal
-    : INT
+    : INT {
+        generate_code("    li t0, " + string($1) + "\n");
+        generate_code("    addi sp, sp, -4\n");
+        generate_code("    sw t0, 0(sp)\n");
+    }
     | FLOAT
     | CHAR
     | STR

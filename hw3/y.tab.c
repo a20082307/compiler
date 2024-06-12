@@ -618,7 +618,7 @@ static YYINT  *yylexp = 0;
 
 static YYINT  *yylexemes = 0;
 #endif /* YYBTYACC */
-#line 282 "parser.y"
+#line 310 "parser.y"
 
 int main() {
     ios::sync_with_stdio(0);
@@ -1392,8 +1392,52 @@ case 35:
 	{ yyval.str = strdup(""); }
 #line 1394 "y.tab.c"
 break;
+case 36:
+#line 145 "parser.y"
+	{
+        generate_code("    lw t0, 4(sp)\n");
+        generate_code("    lw t1, 0(sp)\n");
+        generate_code("    add t0, t0, t1\n");
+        generate_code("    addi sp, sp, 4\n");
+        generate_code("    sw t0, 0(sp)\n");
+    }
+#line 1405 "y.tab.c"
+break;
+case 37:
+#line 152 "parser.y"
+	{
+        generate_code("    lw t0, 4(sp)\n");
+        generate_code("    lw t1, 0(sp)\n");
+        generate_code("    sub t0, t0, t1\n");
+        generate_code("    addi sp, sp, 4\n");
+        generate_code("    sw t0, 0(sp)\n");
+    }
+#line 1416 "y.tab.c"
+break;
+case 39:
+#line 161 "parser.y"
+	{
+        generate_code("    lw t0, 4(sp)\n");
+        generate_code("    lw t1, 0(sp)\n");
+        generate_code("    mul t0, t0, t1\n");
+        generate_code("    addi sp, sp, 4\n");
+        generate_code("    sw t0, 0(sp)\n");
+    }
+#line 1427 "y.tab.c"
+break;
+case 40:
+#line 168 "parser.y"
+	{
+        generate_code("    lw t0, 4(sp)\n");
+        generate_code("    lw t1, 0(sp)\n");
+        generate_code("    div t0, t0, t1\n");
+        generate_code("    addi sp, sp, 4\n");
+        generate_code("    sw t0, 0(sp)\n");
+    }
+#line 1438 "y.tab.c"
+break;
 case 44:
-#line 156 "parser.y"
+#line 180 "parser.y"
 	{
         string *func_name = new string(string(yystack.l_mark[-3].str));
 
@@ -1411,28 +1455,28 @@ case 44:
 
         }
     }
-#line 1415 "y.tab.c"
+#line 1459 "y.tab.c"
 break;
 case 45:
-#line 173 "parser.y"
+#line 197 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
-#line 1420 "y.tab.c"
+#line 1464 "y.tab.c"
 break;
 case 48:
-#line 177 "parser.y"
+#line 201 "parser.y"
 	{
         string *s = new string(string(yystack.l_mark[-2].str) + "," + string(yystack.l_mark[0].str));
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1428 "y.tab.c"
+#line 1472 "y.tab.c"
 break;
 case 49:
-#line 181 "parser.y"
+#line 205 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
-#line 1433 "y.tab.c"
+#line 1477 "y.tab.c"
 break;
 case 50:
-#line 183 "parser.y"
+#line 207 "parser.y"
 	{
         string id_name = string(yystack.l_mark[0].str);
         int index = table -> find(id_name);
@@ -1451,70 +1495,79 @@ case 50:
             generate_code("    sw t0, 0(sp)\n");
         }
     }
-#line 1455 "y.tab.c"
+#line 1499 "y.tab.c"
+break;
+case 51:
+#line 226 "parser.y"
+	{
+        generate_code("    li t0, " + string(yystack.l_mark[0].str) + "\n");
+        generate_code("    addi sp, sp, -4\n");
+        generate_code("    sw t0, 0(sp)\n");
+    }
+#line 1508 "y.tab.c"
 break;
 case 84:
-#line 250 "parser.y"
+#line 278 "parser.y"
 	{
         string *s = new string(string(yystack.l_mark[-1].str) + string(yystack.l_mark[0].str));
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1463 "y.tab.c"
+#line 1516 "y.tab.c"
 break;
 case 85:
-#line 254 "parser.y"
+#line 282 "parser.y"
 	{
         string *s = new string(string(yystack.l_mark[-1].str) + string(yystack.l_mark[0].str));
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1471 "y.tab.c"
+#line 1524 "y.tab.c"
 break;
 case 86:
-#line 258 "parser.y"
+#line 286 "parser.y"
 	{
         string *s = new string(string(yystack.l_mark[-1].str) + string(yystack.l_mark[0].str));
         yyval.str = strdup(s -> c_str()); delete s;
     }
-#line 1479 "y.tab.c"
+#line 1532 "y.tab.c"
 break;
 case 87:
-#line 262 "parser.y"
+#line 290 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
-#line 1484 "y.tab.c"
+#line 1537 "y.tab.c"
 break;
 case 88:
-#line 263 "parser.y"
+#line 291 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
-#line 1489 "y.tab.c"
+#line 1542 "y.tab.c"
 break;
 case 89:
-#line 264 "parser.y"
+#line 292 "parser.y"
 	{ yyval.str = yystack.l_mark[0].str; }
-#line 1494 "y.tab.c"
+#line 1547 "y.tab.c"
 break;
 case 90:
-#line 267 "parser.y"
+#line 295 "parser.y"
 	{
         string *type = new string(string(yystack.l_mark[-1].str) + " " + string(yystack.l_mark[0].str));
         yyval.str = strdup(type -> c_str());   delete type;
     }
-#line 1502 "y.tab.c"
+#line 1555 "y.tab.c"
 break;
 case 92:
-#line 273 "parser.y"
+#line 301 "parser.y"
 	{
         table -> enter_new_scope();
     }
-#line 1509 "y.tab.c"
+#line 1562 "y.tab.c"
 break;
 case 93:
-#line 277 "parser.y"
+#line 305 "parser.y"
 	{
         table -> leave_cur_scope();
     }
-#line 1516 "y.tab.c"
+#line 1569 "y.tab.c"
 break;
-#line 1518 "y.tab.c"
+#line 1571 "y.tab.c"
     default:
         break;
     }

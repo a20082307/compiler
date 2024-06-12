@@ -412,9 +412,6 @@ expr_1
         }
         else if (*func_name == "delay")
             generate_delay_code(atoi($3));
-
-        // string *s = new string("<expr>" + string($1) + "(" + string($3) + ")" + "</expr>");
-        // $$ = strdup(s -> c_str()); delete s;
     }
     | variable { $$ = $1; }
     | literal { $$ = $1; }
@@ -442,10 +439,6 @@ variable
             generate_code("    addi sp, sp, -4\n");
             generate_code("    sw t0, 0(sp)\n");
         }
-
-
-        // string *s = new string("<expr>" + string($1) + "</expr>");
-        // $$ = strdup(s -> c_str()); delete s;
     }
 literal
     : INT {

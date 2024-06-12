@@ -19,40 +19,26 @@ codegen:
     addi sp, s0, -48   // update sp
     //END FUNCTION PROLOGUE
 
-
-    // digitalWrite(26, HIGH)
+    li t0, 3
     addi sp, sp, -4
-    sw ra, 0(sp)
-    li a0, 26
-    li a1, 1
-    jal ra, digitalWrite
-    lw ra, 0(sp)
+    sw t0, 0(sp)
+    li t0, 4
+    addi sp, sp, -4
+    sw t0, 0(sp)
+    lw t0, 4(sp)
+    lw t1, 0(sp)
+    add t0, t0, t1
     addi sp, sp, 4
+    sw t0, 0(sp)
+a
+    lw t0, -48(sp)
+    addi sp, sp, -4
+    sw t0, 0(sp)
 
-
-    // delay(1000)
+    // delay(0)
     addi sp, sp, -4
     sw ra, 0(sp)
-    li a0, 1000
-    jal ra, delay
-    lw ra, 0(sp)
-    addi sp, sp, 4
-
-
-    // digitalWrite(26, LOW)
-    addi sp, sp, -4
-    sw ra, 0(sp)
-    li a0, 26
-    li a1, 0
-    jal ra, digitalWrite
-    lw ra, 0(sp)
-    addi sp, sp, 4
-
-
-    // delay(1000)
-    addi sp, sp, -4
-    sw ra, 0(sp)
-    li a0, 1000
+    li a0, 0
     jal ra, delay
     lw ra, 0(sp)
     addi sp, sp, 4
